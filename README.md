@@ -67,7 +67,7 @@ const dataList = $input.first().json.data[0].data_list;
     "total": 156479,
     "off-peak": 93367,
     "on-peak": 63112,
-    "unit": "Watt"
+    "unit": "watt"
   }
 }
 ```

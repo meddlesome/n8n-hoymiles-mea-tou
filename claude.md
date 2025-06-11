@@ -1,1 +1,2 @@
-Using README.md for all project context
+- Using README.md for all project context
+- Always keep README.md up-to-date as well
