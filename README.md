@@ -57,6 +57,11 @@ const dataList = $input.first().json.data[0].data_list;
 }
 ```
 
+### Key Data Fields
+- `consumption_power`: Total power consumption at the location
+- `grid_p_power`: Grid power flow (positive = buying from grid, negative = selling to grid)
+- `pv_power`: Solar PV power generation
+
 ## Output Structure
 
 ```json
@@ -66,9 +71,15 @@ const dataList = $input.first().json.data[0].data_list;
   "consumption": {
     "total": 156479,
     "off-peak": 93367,
-    "on-peak": 63112,
-    "unit": "watt"
-  }
+    "on-peak": 63112
+  },
+  "consumption_solar": {
+    "total": 132390,
+    "off-peak": 89510,
+    "on-peak": 42880,
+    "to-grid": 52060
+  },
+  "unit": "watt"
 }
 ```
 
@@ -80,7 +91,11 @@ const dataList = $input.first().json.data[0].data_list;
 | `consumption.total` | number | Total daily consumption in Watts |
 | `consumption.off-peak` | number | Off-peak period consumption in Watts |
 | `consumption.on-peak` | number | On-peak period consumption in Watts |
-| `consumption.unit` | string | Always "Watt" |
+| `consumption_solar.total` | number | Total grid consumption after solar offset in Watts |
+| `consumption_solar.off-peak` | number | Off-peak grid consumption after solar offset in Watts |
+| `consumption_solar.on-peak` | number | On-peak grid consumption after solar offset in Watts |
+| `consumption_solar.to-grid` | number | Total power sold back to grid in Watts |
+| `unit` | string | Always "watt" |
 
 ## TOU Logic
 
@@ -91,6 +106,20 @@ const dataList = $input.first().json.data[0].data_list;
 ### Weekends & Holidays
 - **All day off-peak**: 00:00 - 24:00
 - **On-peak**: 0 Watts (no on-peak consumption)
+
+## Solar Consumption Logic
+
+The calculator now supports solar offset calculations using the `grid_p_power` field:
+
+### Grid Power Flow
+- **Positive `grid_p_power`**: Buying electricity from grid (actual consumption)
+- **Negative `grid_p_power`**: Selling electricity to grid (solar excess)
+
+### Consumption Types
+1. **`consumption`**: Raw consumption power without solar offset
+2. **`consumption_solar`**: Actual grid consumption after solar offset
+   - `total/off-peak/on-peak`: Only positive grid power values (actual purchases from grid)
+   - `to-grid`: Absolute value of negative grid power (solar power sold back to grid)
 
 ## 2025 Thai National Holidays
 
@@ -128,9 +157,15 @@ The calculator includes all 19 official holidays for B.E. 2568:
   "consumption": {
     "total": 156479,
     "off-peak": 93367,
-    "on-peak": 63112,
-    "unit": "Watt"
-  }
+    "on-peak": 63112
+  },
+  "consumption_solar": {
+    "total": 132390,
+    "off-peak": 89510,
+    "on-peak": 42880,
+    "to-grid": 24089
+  },
+  "unit": "watt"
 }
 ```
 
@@ -142,9 +177,15 @@ The calculator includes all 19 official holidays for B.E. 2568:
   "consumption": {
     "total": 156479,
     "off-peak": 156479,
+    "on-peak": 0
+  },
+  "consumption_solar": {
+    "total": 98350,
+    "off-peak": 98350,
     "on-peak": 0,
-    "unit": "Watt"
-  }
+    "to-grid": 58129
+  },
+  "unit": "watt"
 }
 ```
 
@@ -156,9 +197,15 @@ The calculator includes all 19 official holidays for B.E. 2568:
   "consumption": {
     "total": 156479,
     "off-peak": 156479,
+    "on-peak": 0
+  },
+  "consumption_solar": {
+    "total": 98350,
+    "off-peak": 98350,
     "on-peak": 0,
-    "unit": "Watt"
-  }
+    "to-grid": 58129
+  },
+  "unit": "watt"
 }
 ```
 

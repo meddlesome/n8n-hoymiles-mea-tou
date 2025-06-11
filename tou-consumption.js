@@ -5,8 +5,8 @@
  */
 
 // Get inputs from n8n nodes
-const dateString = $('Split Out').first().json.date;
-const dataList = $input.first().json.data[0].data_list;
+const dateString = $('Split Out').item.json.date;
+const dataList = $input.item.json.data[0].data_list;
 
 /**
  * MEA TOU Rate Structure:
@@ -60,23 +60,42 @@ let offPeakConsumption = 0;
 let onPeakConsumption = 0;
 let totalConsumption = 0;
 
+// Solar consumption tracking (actual grid consumption after solar offset)
+let offPeakSolarConsumption = 0;
+let onPeakSolarConsumption = 0;
+let totalSolarConsumption = 0;
+let totalToGrid = 0;
+
 // Process each data point
 dataList.forEach(item => {
     const timeMinutes = timeToMinutes(item.date);
     const consumption = parseInt(item.consumption_power);
+    const gridPower = parseInt(item.grid_p_power);
     
     totalConsumption += consumption;
+    
+    // Calculate solar consumption (grid power after solar offset)
+    // Positive grid_p_power = buying from grid (actual consumption)
+    // Negative grid_p_power = selling to grid (solar excess)
+    const solarConsumption = Math.max(0, gridPower); // Only positive values count as consumption
+    const toGrid = Math.abs(Math.min(0, gridPower)); // Absolute value of negative grid power
+    
+    totalSolarConsumption += solarConsumption;
+    totalToGrid += toGrid;
     
     // Determine TOU period based on day type and time
     if (isOffPeakDay) {
         // Weekend/Holiday = All day off-peak
         offPeakConsumption += consumption;
+        offPeakSolarConsumption += solarConsumption;
     } else {
         // Weekday = Check time for on-peak vs off-peak
         if (timeMinutes >= onPeakStart && timeMinutes < onPeakEnd) {
             onPeakConsumption += consumption;
+            onPeakSolarConsumption += solarConsumption;
         } else {
             offPeakConsumption += consumption;
+            offPeakSolarConsumption += solarConsumption;
         }
     }
 });
@@ -88,7 +107,13 @@ return {
     consumption: {
         total: totalConsumption,
         "off-peak": offPeakConsumption,
-        "on-peak": onPeakConsumption,
-        unit: "watt"
-    }
+        "on-peak": onPeakConsumption
+    },
+    consumption_solar: {
+        total: totalSolarConsumption,
+        "off-peak": offPeakSolarConsumption,
+        "on-peak": onPeakSolarConsumption,
+        "to-grid": totalToGrid
+    },
+    unit: "watt"
 };
