@@ -34,12 +34,22 @@ const dataList = $input.first().json.data[0].data_list;
   "data": [{
     "data_list": [
       {
-        "date": "00:00",
-        "consumption_power": "5790"
+          "date": "00:00",
+          "pv_power": "0",
+          "consumption_power": "5790",
+          "meter_c_power": "0",
+          "grid_p_power": "5790",
+          "bms_power": "0",
+          "meter_location": 0
       },
       {
-        "date": "00:15", 
-        "consumption_power": "4270"
+          "date": "00:15",
+          "pv_power": "0",
+          "consumption_power": "4270",
+          "meter_c_power": "0",
+          "grid_p_power": "4270",
+          "bms_power": "0",
+          "meter_location": 0
       }
       // ... 15-minute intervals for 24 hours
     ]
