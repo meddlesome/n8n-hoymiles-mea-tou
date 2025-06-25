@@ -2,6 +2,9 @@
  * MEA Time-of-Use (TOU) Consumption Calculator for n8n
  * Calculates on-peak and off-peak consumption based on MEA rate structure
  * Input: dateString from CONFIGURATION node, dataList from input node
+ * 
+ * Created by @meddlesome (https://github.com/meddlesome/)
+ * Source maintained at: https://github.com/meddlesome/n8n-hoymiles-mea-tou
  */
 
 // Get inputs from n8n nodes
@@ -100,20 +103,25 @@ dataList.forEach(item => {
     }
 });
 
+// Convert watts to kWh (divide by 4000 for 15-minute intervals)
+// 1 kWh = 1000W * 1 hour, and we have 4 intervals per hour (15 minutes each)
+// So to convert 15-minute watt readings to kWh: watts / 4000
+const wattsToKwh = (watts) => watts / 4000;
+
 // Return structured JSON object for n8n
 return {
     date: dateString,
     tou_date: isOffPeakDay,
     consumption: {
-        total: totalConsumption,
-        "off-peak": offPeakConsumption,
-        "on-peak": onPeakConsumption
+        total: wattsToKwh(totalConsumption),
+        "off-peak": wattsToKwh(offPeakConsumption),
+        "on-peak": wattsToKwh(onPeakConsumption)
     },
     consumption_solar: {
-        total: totalSolarConsumption,
-        "off-peak": offPeakSolarConsumption,
-        "on-peak": onPeakSolarConsumption,
-        "to-grid": totalToGrid
+        total: wattsToKwh(totalSolarConsumption),
+        "off-peak": wattsToKwh(offPeakSolarConsumption),
+        "on-peak": wattsToKwh(onPeakSolarConsumption),
+        "to-grid": wattsToKwh(totalToGrid)
     },
-    unit: "watt"
+    unit: "kWh"
 };

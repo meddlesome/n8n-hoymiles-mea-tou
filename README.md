@@ -58,9 +58,11 @@ const dataList = $input.first().json.data[0].data_list;
 ```
 
 ### Key Data Fields
-- `consumption_power`: Total power consumption at the location
-- `grid_p_power`: Grid power flow (positive = buying from grid, negative = selling to grid)
-- `pv_power`: Solar PV power generation
+- `consumption_power`: Total power consumption at the location (in watts)
+- `grid_p_power`: Grid power flow (positive = buying from grid, negative = selling to grid) (in watts)
+- `pv_power`: Solar PV power generation (in watts)
+
+**Note**: Hoymiles exports data in watts, but this calculator converts to kWh for easier cost calculation against MEA unit pricing.
 
 ## Output Structure
 
@@ -79,7 +81,7 @@ const dataList = $input.first().json.data[0].data_list;
     "on-peak": 42880,
     "to-grid": 52060
   },
-  "unit": "watt"
+  "unit": "kWh"
 }
 ```
 
@@ -88,14 +90,14 @@ const dataList = $input.first().json.data[0].data_list;
 |-------|------|-------------|
 | `date` | string | Input date (YYYY-MM-DD) |
 | `tou_date` | boolean | `true` if off-peak day (weekend/holiday) |
-| `consumption.total` | number | Total daily consumption in Watts |
-| `consumption.off-peak` | number | Off-peak period consumption in Watts |
-| `consumption.on-peak` | number | On-peak period consumption in Watts |
-| `consumption_solar.total` | number | Total grid consumption after solar offset in Watts |
-| `consumption_solar.off-peak` | number | Off-peak grid consumption after solar offset in Watts |
-| `consumption_solar.on-peak` | number | On-peak grid consumption after solar offset in Watts |
-| `consumption_solar.to-grid` | number | Total power sold back to grid in Watts |
-| `unit` | string | Always "watt" |
+| `consumption.total` | number | Total daily consumption in kWh |
+| `consumption.off-peak` | number | Off-peak period consumption in kWh |
+| `consumption.on-peak` | number | On-peak period consumption in kWh |
+| `consumption_solar.total` | number | Total grid consumption after solar offset in kWh |
+| `consumption_solar.off-peak` | number | Off-peak grid consumption after solar offset in kWh |
+| `consumption_solar.on-peak` | number | On-peak grid consumption after solar offset in kWh |
+| `consumption_solar.to-grid` | number | Total power sold back to grid in kWh |
+| `unit` | string | Always "kWh" |
 
 ## TOU Logic
 
@@ -105,7 +107,7 @@ const dataList = $input.first().json.data[0].data_list;
 
 ### Weekends & Holidays
 - **All day off-peak**: 00:00 - 24:00
-- **On-peak**: 0 Watts (no on-peak consumption)
+- **On-peak**: 0 kWh (no on-peak consumption)
 
 ## Solar Consumption Logic
 
@@ -165,7 +167,7 @@ The calculator includes all 19 official holidays for B.E. 2568:
     "on-peak": 42880,
     "to-grid": 24089
   },
-  "unit": "watt"
+  "unit": "kWh"
 }
 ```
 
@@ -185,7 +187,7 @@ The calculator includes all 19 official holidays for B.E. 2568:
     "on-peak": 0,
     "to-grid": 58129
   },
-  "unit": "watt"
+  "unit": "kWh"
 }
 ```
 
@@ -205,7 +207,7 @@ The calculator includes all 19 official holidays for B.E. 2568:
     "on-peak": 0,
     "to-grid": 58129
   },
-  "unit": "watt"
+  "unit": "kWh"
 }
 ```
 
