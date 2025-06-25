@@ -71,15 +71,17 @@ const dataList = $input.first().json.data[0].data_list;
   "date": "2025-06-10",
   "tou_date": false,
   "consumption": {
-    "total": 156479,
-    "off-peak": 93367,
-    "on-peak": 63112
+    "total": 39.12,
+    "off_peak": 23.34,
+    "on_peak": 15.78
   },
   "consumption_solar": {
-    "total": 132390,
-    "off-peak": 89510,
-    "on-peak": 42880,
-    "to-grid": 52060
+    "total": 33.10,
+    "off_peak": 22.38,
+    "on_peak": 10.72,
+    "to_grid": 13.02,
+    "from_solar": 6.02,
+    "total_production": 19.04
   },
   "unit": "kWh"
 }
@@ -91,12 +93,14 @@ const dataList = $input.first().json.data[0].data_list;
 | `date` | string | Input date (YYYY-MM-DD) |
 | `tou_date` | boolean | `true` if off-peak day (weekend/holiday) |
 | `consumption.total` | number | Total daily consumption in kWh |
-| `consumption.off-peak` | number | Off-peak period consumption in kWh |
-| `consumption.on-peak` | number | On-peak period consumption in kWh |
+| `consumption.off_peak` | number | Off-peak period consumption in kWh |
+| `consumption.on_peak` | number | On-peak period consumption in kWh |
 | `consumption_solar.total` | number | Total grid consumption after solar offset in kWh |
-| `consumption_solar.off-peak` | number | Off-peak grid consumption after solar offset in kWh |
-| `consumption_solar.on-peak` | number | On-peak grid consumption after solar offset in kWh |
-| `consumption_solar.to-grid` | number | Total power sold back to grid in kWh |
+| `consumption_solar.off_peak` | number | Off-peak grid consumption after solar offset in kWh |
+| `consumption_solar.on_peak` | number | On-peak grid consumption after solar offset in kWh |
+| `consumption_solar.to_grid` | number | Total power sold back to grid in kWh |
+| `consumption_solar.from_solar` | number | Total power consumed from solar (consumption.total - consumption_solar.total) in kWh |
+| `consumption_solar.total_production` | number | Total solar production (consumption_solar.from_solar + consumption_solar.to_grid) in kWh |
 | `unit` | string | Always "kWh" |
 
 ## TOU Logic
@@ -157,15 +161,17 @@ The calculator includes all 19 official holidays for B.E. 2568:
   "date": "2025-06-10",
   "tou_date": false,
   "consumption": {
-    "total": 156479,
-    "off-peak": 93367,
-    "on-peak": 63112
+    "total": 39.12,
+    "off_peak": 23.34,
+    "on_peak": 15.78
   },
   "consumption_solar": {
-    "total": 132390,
-    "off-peak": 89510,
-    "on-peak": 42880,
-    "to-grid": 24089
+    "total": 33.10,
+    "off_peak": 22.38,
+    "on_peak": 10.72,
+    "to_grid": 6.02,
+    "from_solar": 6.02,
+    "total_production": 12.04
   },
   "unit": "kWh"
 }
@@ -177,15 +183,17 @@ The calculator includes all 19 official holidays for B.E. 2568:
   "date": "2025-06-14",
   "tou_date": true,
   "consumption": {
-    "total": 156479,
-    "off-peak": 156479,
-    "on-peak": 0
+    "total": 39.12,
+    "off_peak": 39.12,
+    "on_peak": 0
   },
   "consumption_solar": {
-    "total": 98350,
-    "off-peak": 98350,
-    "on-peak": 0,
-    "to-grid": 58129
+    "total": 24.59,
+    "off_peak": 24.59,
+    "on_peak": 0,
+    "to_grid": 14.53,
+    "from_solar": 14.53,
+    "total_production": 29.06
   },
   "unit": "kWh"
 }
@@ -197,15 +205,17 @@ The calculator includes all 19 official holidays for B.E. 2568:
   "date": "2025-05-01",
   "tou_date": true,
   "consumption": {
-    "total": 156479,
-    "off-peak": 156479,
-    "on-peak": 0
+    "total": 39.12,
+    "off_peak": 39.12,
+    "on_peak": 0
   },
   "consumption_solar": {
-    "total": 98350,
-    "off-peak": 98350,
-    "on-peak": 0,
-    "to-grid": 58129
+    "total": 24.59,
+    "off_peak": 24.59,
+    "on_peak": 0,
+    "to_grid": 14.53,
+    "from_solar": 14.53,
+    "total_production": 29.06
   },
   "unit": "kWh"
 }

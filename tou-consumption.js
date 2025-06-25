@@ -108,20 +108,26 @@ dataList.forEach(item => {
 // So to convert 15-minute watt readings to kWh: watts / 4000
 const wattsToKwh = (watts) => watts / 4000;
 
+// Calculate derived values
+const totalFromSolar = totalConsumption - totalSolarConsumption;
+const totalProduction = totalFromSolar + totalToGrid;
+
 // Return structured JSON object for n8n
 return {
     date: dateString,
     tou_date: isOffPeakDay,
     consumption: {
         total: wattsToKwh(totalConsumption),
-        "off-peak": wattsToKwh(offPeakConsumption),
-        "on-peak": wattsToKwh(onPeakConsumption)
+        off_peak: wattsToKwh(offPeakConsumption),
+        on_peak: wattsToKwh(onPeakConsumption)
     },
     consumption_solar: {
         total: wattsToKwh(totalSolarConsumption),
-        "off-peak": wattsToKwh(offPeakSolarConsumption),
-        "on-peak": wattsToKwh(onPeakSolarConsumption),
-        "to-grid": wattsToKwh(totalToGrid)
+        off_peak: wattsToKwh(offPeakSolarConsumption),
+        on_peak: wattsToKwh(onPeakSolarConsumption),
+        to_grid: wattsToKwh(totalToGrid),
+        from_solar: wattsToKwh(totalFromSolar),
+        total_production: wattsToKwh(totalProduction)
     },
     unit: "kWh"
 };
